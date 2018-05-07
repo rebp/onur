@@ -55,6 +55,12 @@ bomb {
     cursor: pointer;
 }
 
+upgrade {
+    width:142px; height:224px;
+    background-image: url(../images/bomb.png);
+    cursor: pointer;
+}
+
 cloud {
     background-image: url(../images/cloud.png);
     width:277px; height: 109px;

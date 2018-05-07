@@ -8,13 +8,16 @@ class Game {
     private statusbar:HTMLElement
     private bombs:Bomb[]
     private car:Car
+    private upgrade:Upgrade
     
     private constructor() {
         this.textfield = document.getElementsByTagName("textfield")[0] as HTMLElement
         this.statusbar = document.getElementsByTagName("bar")[0] as HTMLElement
 
         this.car = new Car()
+        this.upgrade = new Upgrade()
         this.bombs = [new Bomb()]
+
         this.gameLoop()    
     }
 
@@ -25,20 +28,24 @@ class Game {
         return Game.instance;
     }
     
-    // timer voor bommetjes
     private gameLoop():void{
         console.log("updating the game")
         requestAnimationFrame(() => this.gameLoop())
         this.car.update()
+        this.upgrade.update()
 
         for(let bomb of this.bombs){
             bomb.update()
             if( Util.checkCollision( this.car.getBoundingClientRect(), bomb.getBoundingClientRect()  ) ) {
-                alert("BOOM!!!")
+                bomb.reset()
+                Game.getInstance().scorePoint();
             }
-        }       
+        }
 
-
+        if( Util.checkCollision( this.car.getBoundingClientRect(), this.upgrade.getBoundingClientRect()  ) ) {
+            this.statusbar.style.backgroundPositionX = "0px"
+            this.reset()
+        }
     }
 
     public destroyBuilding(){
@@ -57,12 +64,11 @@ class Game {
             this.statusbar.style.backgroundPositionX = "-216px"
                 break;
             case 4:
-            this.statusbar.style.backgroundPositionX = "-288px"
+            this.statusbar.style.backgroundPositionX = "-288px"            
             setTimeout(() => {
-                this.scorePoint()
                 this.statusbar.style.backgroundPositionX = "0px"
-            }, 300);
-            this.destroyed = 0
+                this.reset()
+            }, 300);            
                 break;
 
         }
@@ -72,6 +78,11 @@ class Game {
     public scorePoint() {
         this.score ++
         this.textfield.innerHTML = "Score: " + this.score 
+    }
+
+    public reset() {
+        this.score = 0
+        this.destroyed = 0
     }
 
 } 

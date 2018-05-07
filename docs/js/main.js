@@ -1,8 +1,7 @@
 "use strict";
 var Bomb = (function () {
-    function Bomb(game) {
+    function Bomb() {
         var _this = this;
-        this.game = game;
         this.element = document.createElement("bomb");
         var foreground = document.getElementsByTagName("foreground")[0];
         foreground.appendChild(this.element);
@@ -10,20 +9,23 @@ var Bomb = (function () {
         this.posx = Math.random() * window.innerWidth;
         this.element.addEventListener('click', function () {
             _this.reset();
-            _this.game.scorePoint();
+            Game.getInstance().scorePoint();
         });
     }
     Bomb.prototype.update = function () {
-        this.posy += 10;
+        this.posy += 6;
         this.element.style.transform = "translate(" + this.posx + "px, " + this.posy + "px)";
         if (this.posy >= window.innerHeight) {
             this.reset();
-            this.game.destroyBuilding();
+            Game.getInstance().destroyBuilding();
         }
     };
     Bomb.prototype.reset = function () {
         this.posy = -(this.element.clientHeight);
         this.posx = Math.random() * (window.innerWidth - this.element.clientWidth);
+    };
+    Bomb.prototype.getBoundingClientRect = function () {
+        return this.element.getBoundingClientRect();
     };
     return Bomb;
 }());
@@ -45,6 +47,9 @@ var Car = (function () {
     Car.prototype.random = function (max, min) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
+    Car.prototype.getBoundingClientRect = function () {
+        return this.element.getBoundingClientRect();
+    };
     return Car;
 }());
 var Game = (function () {
@@ -54,17 +59,23 @@ var Game = (function () {
         this.textfield = document.getElementsByTagName("textfield")[0];
         this.statusbar = document.getElementsByTagName("bar")[0];
         this.car = new Car();
-        this.bombs = [new Bomb(this)];
+        this.bomb = new Bomb();
         this.gameLoop();
     }
+    Game.getInstance = function () {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    };
     Game.prototype.gameLoop = function () {
         var _this = this;
         console.log("updating the game");
         requestAnimationFrame(function () { return _this.gameLoop(); });
         this.car.update();
-        for (var _i = 0, _a = this.bombs; _i < _a.length; _i++) {
-            var bomb = _a[_i];
-            bomb.update();
+        this.bomb.update();
+        if (Util.checkCollision(this.car.getBoundingClientRect(), this.bomb.getBoundingClientRect())) {
+            alert("BOOM!!!");
         }
     };
     Game.prototype.destroyBuilding = function () {
@@ -84,7 +95,6 @@ var Game = (function () {
             case 4:
                 this.statusbar.style.backgroundPositionX = "-288px";
                 setTimeout(function () {
-                    alert("YOU LOST");
                     _this.scorePoint();
                     _this.statusbar.style.backgroundPositionX = "0px";
                 }, 300);
@@ -99,6 +109,17 @@ var Game = (function () {
     return Game;
 }());
 window.addEventListener("load", function () {
-    new Game();
+    Game.getInstance();
 });
+var Util = (function () {
+    function Util() {
+    }
+    Util.checkCollision = function (a, b) {
+        return (a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom);
+    };
+    return Util;
+}());
 //# sourceMappingURL=main.js.map

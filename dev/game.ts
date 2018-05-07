@@ -6,7 +6,8 @@ class Game {
     private destroyed:number = 0
     private textfield:HTMLElement
     private statusbar:HTMLElement
-    private bombs:Bomb[]
+    private bomb: Bomb;
+    //private bombs:Bomb[]
     private car:Car
     
     private constructor() {
@@ -14,7 +15,8 @@ class Game {
         this.statusbar = document.getElementsByTagName("bar")[0] as HTMLElement
 
         this.car = new Car()
-        this.bombs = [new Bomb()]
+        this.bomb = new Bomb()
+        //this.bombs = [new Bomb()]
         this.gameLoop()    
     }
 
@@ -30,14 +32,15 @@ class Game {
         console.log("updating the game")
         requestAnimationFrame(() => this.gameLoop())
         this.car.update()
+        this.bomb.update()
 
-        for(let bomb of this.bombs){
-            bomb.update()
-        }
-        
-        // if( Util.checkCollision(  ) ) {
-
+        // for(let bomb of this.bombs){
+        //     bomb.update()
         // }
+        
+        if( Util.checkCollision( this.car.getBoundingClientRect(), this.bomb.getBoundingClientRect()  ) ) {
+            alert("BOOM!!!")
+        }
 
     }
 
@@ -59,7 +62,6 @@ class Game {
             case 4:
             this.statusbar.style.backgroundPositionX = "-288px"
             setTimeout(() => {
-                alert("YOU LOST")
                 this.scorePoint()
                 this.statusbar.style.backgroundPositionX = "0px"
             }, 300);

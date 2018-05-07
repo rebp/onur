@@ -36,5 +36,8 @@ class Bomb {
         this.posx = Math.random() * (window.innerWidth - this.element.clientWidth)       
     }
 
+    public getBoundingClientRect() {
+        return this.element.getBoundingClientRect();
+    }
 
 }

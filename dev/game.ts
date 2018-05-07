@@ -6,8 +6,7 @@ class Game {
     private destroyed:number = 0
     private textfield:HTMLElement
     private statusbar:HTMLElement
-    private bomb: Bomb;
-    //private bombs:Bomb[]
+    private bombs:Bomb[]
     private car:Car
     
     private constructor() {
@@ -15,8 +14,7 @@ class Game {
         this.statusbar = document.getElementsByTagName("bar")[0] as HTMLElement
 
         this.car = new Car()
-        this.bomb = new Bomb()
-        //this.bombs = [new Bomb()]
+        this.bombs = [new Bomb()]
         this.gameLoop()    
     }
 
@@ -32,15 +30,14 @@ class Game {
         console.log("updating the game")
         requestAnimationFrame(() => this.gameLoop())
         this.car.update()
-        this.bomb.update()
 
-        // for(let bomb of this.bombs){
-        //     bomb.update()
-        // }
-        
-        if( Util.checkCollision( this.car.getBoundingClientRect(), this.bomb.getBoundingClientRect()  ) ) {
-            alert("BOOM!!!")
-        }
+        for(let bomb of this.bombs){
+            bomb.update()
+            if( Util.checkCollision( this.car.getBoundingClientRect(), bomb.getBoundingClientRect()  ) ) {
+                alert("BOOM!!!")
+            }
+        }       
+
 
     }
 

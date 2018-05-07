@@ -14,7 +14,7 @@ class Bomb {
 
         this.element.addEventListener('click', () => {
             this.reset()
-            Game.scorePoint()
+            Game.getInstance().scorePoint();
         })
 
     }
@@ -26,7 +26,7 @@ class Bomb {
 
         if( this.posy >= window.innerHeight  ) {
             this.reset()
-            Game.destroyBuilding()
+            Game.getInstance().destroyBuilding();
          }
 
     }

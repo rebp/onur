@@ -33,11 +33,15 @@ class Game {
 
         for(let bomb of this.bombs){
             bomb.update()
-        }        
+        }
+        
+        // if( Util.checkCollision(  ) ) {
+
+        // }
 
     }
 
-    public static destroyBuilding(){
+    public destroyBuilding(){
 
         this.destroyed ++
         console.log("buildings destroyed " + this.destroyed)
@@ -66,7 +70,7 @@ class Game {
         
     }
        
-    public static scorePoint() {
+    public scorePoint() {
         this.score ++
         this.textfield.innerHTML = "Score: " + this.score 
     }

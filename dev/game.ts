@@ -1,4 +1,6 @@
 class Game {
+
+    private static instance: Game;
     
     private score:number = 0
     private destroyed:number = 0
@@ -7,13 +9,20 @@ class Game {
     private bombs:Bomb[]
     private car:Car
     
-    constructor() {
+    private constructor() {
         this.textfield = document.getElementsByTagName("textfield")[0] as HTMLElement
         this.statusbar = document.getElementsByTagName("bar")[0] as HTMLElement
 
         this.car = new Car()
-        this.bombs = [new Bomb(this)]
+        this.bombs = [new Bomb()]
         this.gameLoop()    
+    }
+
+    public static getInstance() {
+        if (! Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
     }
     
     // timer voor bommetjes
@@ -28,7 +37,7 @@ class Game {
 
     }
 
-    public destroyBuilding(){
+    public static destroyBuilding(){
 
         this.destroyed ++
         console.log("buildings destroyed " + this.destroyed)
@@ -57,7 +66,7 @@ class Game {
         
     }
        
-    public scorePoint() {
+    public static scorePoint() {
         this.score ++
         this.textfield.innerHTML = "Score: " + this.score 
     }
@@ -65,5 +74,5 @@ class Game {
 } 
 
 window.addEventListener("load", () => {
-    new Game();
+    Game.getInstance();
 });

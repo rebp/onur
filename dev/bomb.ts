@@ -3,10 +3,8 @@ class Bomb {
     private element: HTMLElement
     private posy:number
     private posx:number
-    private game:Game
         
-    constructor(game:Game) {
-        this.game = game
+    constructor() {
         this.element = document.createElement("bomb")
         let foreground = document.getElementsByTagName("foreground")[0]
         foreground.appendChild(this.element);
@@ -16,19 +14,19 @@ class Bomb {
 
         this.element.addEventListener('click', () => {
             this.reset()
-            this.game.scorePoint()
+            Game.scorePoint()
         })
 
     }
 
     public update():void {
 
-        this.posy += 10
+        this.posy += 6
         this.element.style.transform = `translate(${this.posx}px, ${this.posy}px)`
 
         if( this.posy >= window.innerHeight  ) {
             this.reset()
-            this.game.destroyBuilding()
+            Game.destroyBuilding()
          }
 
     }
